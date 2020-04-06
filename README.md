@@ -1,3 +1,8 @@
 # Mandelbrot-viewer
 A Mandelbrot set viewer made in Qt (C++)  
-![GIF](https://i.imgur.com/bPh7gU4.gif)
+![GIF](https://i.imgur.com/bPh7gU4.gif)  
+
+To do:
+1. implement multithreading
+2. add different color palettes 
+3. add smoothing algorithm
