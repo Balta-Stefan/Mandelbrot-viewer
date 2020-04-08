@@ -17,7 +17,19 @@ void Canvas::reset()
     downRightX = 1;
     downRightY = -1;
 
+    //aspectRatio = abs ((upperLeftX - downRightX) / (upperLeftY - downRightY));
+    incrementX = (downRightX - upperLeftX) / (double)canvasWidth;
+    incrementY = (upperLeftY - downRightY) / (double)canvasHeight;
+
+    emit(changeIterationSpinBox(numberOfIterations));
+    emit(wakeThreads());
+    //draw();
+}
+
+void Canvas::computationDoneNotifier()
+{
     draw();
+    qInfo() << "thread done";
 }
 
 
@@ -51,19 +63,31 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent)
     this->setMinimumSize(canvasWidth, canvasHeight);
     this->setMaximumSize(canvasWidth, canvasHeight);
 
+
     selectionRectangleX = selectionRectangleY = -1;
     numberOfIterations = 500;
     upperLeftX = -2;
     upperLeftY = 1;
     downRightX = 1;
     downRightY = -1;
-    aspectRatio = abs ((upperLeftX - downRightX) / (upperLeftY - downRightY));
+    //aspectRatio = abs ((upperLeftX - downRightX) / (upperLeftY - downRightY));
     incrementX = (downRightX - upperLeftX) / (double)canvasWidth;
     incrementY = (upperLeftY - downRightY) / (double)canvasHeight;
     //aspectRatio = canvasWidth/canvasHeight;
+
+
+    screenColors = new QColor*[canvasHeight];
+    for(int i = 0; i < canvasHeight; i++)
+        screenColors[i] = new QColor[canvasWidth];
     QImage tempImage(canvasWidth, canvasHeight, QImage::Format_RGB32);
     image = tempImage;
-    draw();
+    numberOfWorkers = defaultNumOfWorkers;
+    emit(changeWorkersSpinbox(numberOfWorkers));
+    rowsPerThread = canvasHeight / numberOfWorkers;
+    makeThreads(numberOfWorkers);
+    emit(wakeThreads());
+
+    //draw();
 }
 
 void Canvas::paintEvent(QPaintEvent *)
@@ -90,11 +114,14 @@ void Canvas::paintEvent(QPaintEvent *)
 void Canvas::changeNumOfIterations(int n)
 {
     numberOfIterations = n;
-    draw();
+    emit(wakeThreads());
+    //draw();
 }
 void Canvas::changeNumOfWorkers(int n)
 {
     numberOfWorkers = n;
+    rowsPerThread = canvasHeight / numberOfWorkers;
+    makeThreads(n);
 }
 
 //unsigned int isMandelbrotNumber(double real, double imaginary, unsigned short numberOfIterations)
@@ -105,6 +132,7 @@ unsigned int Canvas::isMandelbrotNumber(double real, double imaginary)
     double secondaryReal = real;
     double secondaryImaginary = imaginary;
 
+    //qInfo() << "(r, i) = " << real << ", " << imaginary;
     //qInfo() << "real, imaginary:" << real << imaginary;
     for (unsigned int i = 0; i < numberOfIterations; i++)
     {
@@ -128,7 +156,6 @@ unsigned int Canvas::isMandelbrotNumber(double real, double imaginary)
 
     //screen[coordinateY][coordinateX] = 0;
     //image.setPixelColor(coordinateX, coordinateY, Qt::black);
-
     return 0;
 }
 
@@ -248,7 +275,8 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
        calculateCoords();
        //qInfo() << "after";
        //qInfo() << "upperLeftX, upperLeftY, downRightX, downRightY" << upperLeftX << "," << upperLeftY<< "," << downRightX<< "," << downRightY;
-       draw();
+       //draw();
+       emit(wakeThreads());
 
     }
 }
@@ -269,20 +297,15 @@ void Canvas::draw()
 
     //setPixelColor(int x, int y, const QColor &color)
 
-    qInfo() << "width: " << canvasWidth;
+    /*qInfo() << "width: " << canvasWidth;
     qInfo() << "width: " << canvasWidth;
 
     for(unsigned short y = 0; y < canvasHeight; y++)
     {
         double imaginary = upperLeftY - incrementY * y;
 
-        QVector<QPair<double, double>> row;
         for(unsigned short x = 0; x < canvasWidth; x++)
         {
-            QPair<double, double> tempPair;
-            tempPair.first = upperLeftX + incrementX * x;
-            tempPair.second = imaginary;
-            row.push_back(tempPair);
             int temp = isMandelbrotNumber(upperLeftX + incrementX * x, imaginary);
             if(temp == 0)
             {
@@ -298,7 +321,12 @@ void Canvas::draw()
             }
 
         }
-    }
+    }*/
+    //added because of multithreading, should be optimised because only a few rows will be updated each time a thread finishes its job
+    for(unsigned short y = 0; y < canvasHeight; y++)
+        for(unsigned short x = 0; x < canvasWidth; x++)
+            image.setPixelColor(x, y, screenColors[y][x]);
+
 
 
 
@@ -321,17 +349,87 @@ void Canvas::selectionRectangle(int clickedX, int clickedY, int movedX, int move
 
 }
 
-
-void Canvas::Worker::doWork()
+void Canvas::makeThreads(unsigned short numberOfThreads)
 {
+    /*might need to close threads with :
+       workerThread.quit();
+       workerThread.wait();
+      */
+    //PROBLEM!!!!!! - QThread objects aren't saved anywhere, they are destroyed after each iteration - https://doc.qt.io/qt-5/qthread.html#dtor.QThread
 
+    //when number of threads changes, all threads will be stopped and removed, dirty but simple
+    for(unsigned int i = 0; i < threadVector.size(); i++)
+    {
+        threadVector[i]->quit();
+        threadVector[i]->wait();
+        delete threadVector[i];
+        delete threads[i];
+    }
+    threadVector.clear();
+    threads.clear();
+
+    /*for(auto i : threadVector)
+    {
+        i->quit();
+        i->wait();
+    }
+    threadVector.clear();
+    threads.clear();*/
+
+    unsigned short rowForThread = 0;
+    unsigned short numOfRows = rowsPerThread; //needed because of the last thread which may have more rows than other threads
+    for(unsigned short i = 0; i < numberOfThreads; i++)
+    {
+        if(i < numberOfThreads-1)
+            rowForThread = i*rowsPerThread;
+        else
+        {
+            if(numberOfThreads > 1)
+            {
+                rowForThread = canvasHeight - i*rowsPerThread;
+                numOfRows = canvasHeight - rowForThread;
+            }
+            else
+                rowForThread = 0;
+        }
+
+
+        QThread *tempThread = new QThread;
+        Worker *tempWorker = new Worker(this, numOfRows, rowForThread);
+        tempWorker->moveToThread(tempThread);
+        connect(this, &Canvas::wakeThreads, tempWorker, &Worker::doWork); //might also need queued connection, unsure
+        connect(tempWorker, &Worker::resultReady, this, &Canvas::computationDoneNotifier, Qt::QueuedConnection); //multiple threads access main thread -> need queued connection
+        threads.push_back(tempWorker);
+        threadVector.push_back(tempThread);
+        tempThread->start();
+    }
 }
 
+void Worker::doWork()
+{
+    //there might be problems when all threads call function isMandelBrot in the main thread
+    //unsigned int isMandelbrotNumber(double real, double imaginary)
+    double imaginaryCoord = otherClass->upperLeftY - yCoordinate * otherClass->incrementY;
 
+    //qInfo() << "thread doWork() start";
+    for(int i = 0; i < numOfRows; i++)
+    {
+        double realCoord = otherClass->upperLeftX;
 
-
-
-
-
-
-
+        for(int j = 0; j < otherClass->canvasWidth; j++)
+        {
+            QColor tempColor;
+            //qInfo() << "doWork() after: " << otherClass->upperLeftX + j*otherClass->incrementX << ", " << imaginaryCoord;
+            unsigned int color = otherClass->isMandelbrotNumber(realCoord , imaginaryCoord);
+            if(color == 0)
+                tempColor = Qt::black;
+            else
+                tempColor = otherClass->mapping[color%16];
+            otherClass->screenColors[yCoordinate+i][j] = tempColor;
+            realCoord += otherClass->incrementX;
+            //to do:find out where these colors should be converted to QImage / pixmap
+        }
+        imaginaryCoord -= otherClass->incrementY;
+    }
+    emit(resultReady());
+}

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>991</width>
-    <height>669</height>
+    <width>1215</width>
+    <height>829</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,6 +36,9 @@
           </item>
           <item>
            <widget class="QSpinBox" name="spinBox">
+            <property name="minimum">
+             <number>1</number>
+            </property>
             <property name="maximum">
              <number>20</number>
             </property>
@@ -117,7 +120,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>991</width>
+     <width>1215</width>
      <height>21</height>
     </rect>
    </property>
@@ -131,6 +134,8 @@
    <header>canvas.h</header>
    <container>1</container>
    <slots>
+    <signal>changeIterationSpinBox(int)</signal>
+    <signal>changeWorkersSpinbox(int)</signal>
     <slot>changeNumOfWorkers(int)</slot>
     <slot>changeNumOfIterations(int)</slot>
     <slot>reset()</slot>
@@ -184,6 +189,38 @@
     <hint type="destinationlabel">
      <x>231</x>
      <y>228</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>widget</sender>
+   <signal>changeIterationSpinBox(int)</signal>
+   <receiver>spinBox_2</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>270</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>168</x>
+     <y>84</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>widget</sender>
+   <signal>changeWorkersSpinbox(int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>244</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>140</x>
+     <y>46</y>
     </hint>
    </hints>
   </connection>
