@@ -6,3 +6,4 @@ To do:
 1. implement multithreading
 2. add different color palettes 
 3. add smoothing algorithm
+4. use higher floating point precision
