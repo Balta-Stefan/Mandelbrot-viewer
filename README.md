@@ -7,3 +7,4 @@ To do:
 2. add different color palettes 
 3. add smoothing algorithm
 4. use higher floating point precision
+5. perform further parallelisation with vector instructions (intrinsics)
