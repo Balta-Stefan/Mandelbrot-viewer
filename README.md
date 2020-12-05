@@ -8,3 +8,4 @@ To do:
 3. add smoothing algorithm
 4. use higher floating point precision
 5. perform further parallelisation with vector instructions (intrinsics)
+6. parallelize using GPU (OpenCL/CUDA)
