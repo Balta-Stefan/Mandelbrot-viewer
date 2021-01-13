@@ -353,7 +353,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
     }
     emit(resetLabels());
-    calculateCPUParallel();
+    calculateGPU();
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)

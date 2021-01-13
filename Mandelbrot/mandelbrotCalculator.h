@@ -45,7 +45,8 @@ private:
     const char* TranslateOpenCLError(cl_int errorCode);
     std::string readKernelSource(const char* filename);
 
-    double* temporaryResultAVX;
+    double* temporaryResultSerialAVX;
+    double** temporaryResultsParallelAVX;
 
 };
 

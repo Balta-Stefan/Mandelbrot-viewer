@@ -24,6 +24,8 @@ FORMS += \
 
 QMAKE_CXXFLAGS += -openmp
 QMAKE_CXXFLAGS += /arch:AVX2
+QMAKE_CXXFLAGS += /Oi
+QMAKE_CXXFLAGS += /O2
 
 
 # Default rules for deployment.

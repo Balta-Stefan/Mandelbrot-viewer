@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     //emit(calculateCPUParallel());
-    emit(calculateAVXSerial());
+    emit(calculateGPU());
 }
 
 MainWindow::~MainWindow()
@@ -17,32 +17,32 @@ MainWindow::~MainWindow()
 
 void MainWindow::setCPUSerialLabel(qint64 time)
 {
-    QString temp = QString::number(time/1000.0);
-    ui->CPUserialLabel->setText(temp);
+    QString temp = QString::number(time);
+    ui->CPUserialLabel->setText(temp + "[ms]");
 }
 
 void MainWindow::setCPUParallelLabel(qint64 time)
 {
-    QString temp = QString::number(time/1000.0);
-    ui->CPUparallelLabel->setText(temp);
+    QString temp = QString::number(time);
+    ui->CPUparallelLabel->setText(temp + "[ms]");
 }
 
 void MainWindow::setGPULabel(qint64 time)
 {
-    QString temp = QString::number(time/1000.0);
-    ui->GPULabel->setText(temp);
+    QString temp = QString::number(time);
+    ui->GPULabel->setText(temp + "[ms]");
 }
 
 void MainWindow::setAVXSerialLabel(qint64 time)
 {
-    QString temp = QString::number(time/1000.0);
-    ui->AVXserialLabel->setText(temp);
+    QString temp = QString::number(time);
+    ui->AVXserialLabel->setText(temp + "[ms]");
 }
 
 void MainWindow::setAVXParallelLabel(qint64 time)
 {
-    QString temp = QString::number(time/1000.0);
-    ui->AVXparallelLabel->setText(temp);
+    QString temp = QString::number(time);
+    ui->AVXparallelLabel->setText(temp + "[ms]");
 }
 
 
