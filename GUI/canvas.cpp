@@ -38,6 +38,7 @@ void Canvas::reset()
     incrementY = (upperLeftY - downRightY) / (double)canvasHeight;
 
     emit(changeIterationSpinBox(numberOfIterations));
+    emit(resetLabels());
     calculateCPUParallel();
 }
 
@@ -62,7 +63,11 @@ void Canvas::computationDoneNotifier()
     qInfo() << "thread done";
 }
 
-
+Canvas::~Canvas()
+{
+    free(screen);
+    //_aligned_free(screen);
+}
 
 Canvas::Canvas(QWidget *parent) : QWidget(parent)
 {
@@ -97,6 +102,7 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent)
     canvasHeight = 768;
 
     screen = (unsigned int*)calloc(canvasHeight*canvasWidth, sizeof(unsigned int));
+    //screen = (unsigned int*)_aligned_malloc(canvasWidth*canvasHeight*sizeof(unsigned int), 32); //which alignment boundary?32 or 64?
 
 
     mandelbrotter = new MandelbrotCalculator(screen, canvasWidth, canvasHeight);
@@ -150,7 +156,8 @@ void Canvas::paintEvent(QPaintEvent *)
 void Canvas::changeNumOfIterations(int n)
 {
     numberOfIterations = n;
-    draw();
+    emit(resetLabels());
+    calculateCPUParallel();
 }
 
 //unsigned int isMandelbrotNumber(double real, double imaginary, unsigned short numberOfIterations)

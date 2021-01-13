@@ -23,6 +23,8 @@ FORMS += \
     mainwindow.ui
 
 QMAKE_CXXFLAGS += -openmp
+QMAKE_CXXFLAGS += /arch:AVX2
+
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -39,3 +41,5 @@ else:win32-g++: PRE_TARGETDEPS += $$PWD/'../../../../../Program Files/NVIDIA GPU
 
 DISTFILES += \
     Mandelbrot.cl
+
+

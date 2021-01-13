@@ -10,10 +10,6 @@
 #include <QElapsedTimer>
 #include <mandelbrotCalculator.h>
 
-class Worker;
-
-
-unsigned int isMandelbrotNumber(double real, double imaginary, unsigned short numberOfIterations);
 
 //when forming a selection rectangle, redraw the widget (using QImage converted to pixmap) and draw rectangle over it
 //multithreading: subclass QObject, create QThread object and move that QObject to QThread (movetothread method)
@@ -55,6 +51,7 @@ private:
 
 public:
     Canvas(QWidget *parent = nullptr);
+    ~Canvas();
 private slots:
     void changeNumOfIterations(int n);
 

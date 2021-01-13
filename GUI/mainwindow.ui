@@ -441,6 +441,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>widget</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>104</x>
+     <y>223</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>229</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>calculateCPUSerial()</signal>

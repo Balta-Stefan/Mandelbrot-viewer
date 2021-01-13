@@ -6,7 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    emit(calculateCPUParallel());
+    //emit(calculateCPUParallel());
+    emit(calculateAVXSerial());
 }
 
 MainWindow::~MainWindow()
