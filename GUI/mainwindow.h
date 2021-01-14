@@ -29,6 +29,7 @@ signals:
     void calculateGPU();
     void calculateAVXSerial();
     void calculateAVXParallel();
+    void benchmark();
 
 private slots:
     void on_CPUserial_clicked();

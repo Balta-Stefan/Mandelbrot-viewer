@@ -9,6 +9,11 @@
 #include <cmath>
 #include <QElapsedTimer>
 #include <mandelbrotCalculator.h>
+#include <vector>
+#include <fstream>
+#include <iomanip>
+
+
 
 
 //when forming a selection rectangle, redraw the widget (using QImage converted to pixmap) and draw rectangle over it
@@ -17,6 +22,9 @@ class Canvas : public QWidget
 {
     Q_OBJECT
 private:
+    const char* serializedFileName = "mandelbrot coordinates.bin";
+    void serializeCoordinates();
+    void deserializeCoordinates();
     //unsigned short threadsDone = 0;
     unsigned short numberOfColors;
     unsigned short canvasWidth, canvasHeight;
@@ -47,7 +55,16 @@ private:
     MandelbrotCalculator* mandelbrotter;
     QElapsedTimer timer;
 
+    std::vector<double> upperLeftXDatabase;
+    std::vector<double> upperLeftYDatabase;
+    std::vector<double> downRightXDatabase;
+    std::vector<double> downRightYDatabase;
 
+    std::vector<double> upperLeftXBenchmark;
+    std::vector<double> upperLeftYBenchmark;
+    std::vector<double> downRightXBenchmark;
+    std::vector<double> downRightYBenchmark;
+    size_t benchmarkCounter = 0;
 
 public:
     Canvas(QWidget *parent = nullptr);
@@ -55,10 +72,9 @@ public:
 private slots:
     void changeNumOfIterations(int n);
 
-    //void computationDoneNotifier(unsigned short numOfRows, unsigned short rowForThread);
-    void computationDoneNotifier();
 public slots:
      void reset();
+     void benchmark();
      void calculateCPUSerial();
      void calculateCPUParallel();
      void calculateGPU();

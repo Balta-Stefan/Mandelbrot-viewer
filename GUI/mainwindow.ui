@@ -154,10 +154,17 @@
        </layout>
       </item>
       <item>
+       <widget class="QPushButton" name="benchmarkButton">
+        <property name="text">
+         <string>Benchmark</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="pushButton">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -182,7 +189,7 @@
      </layout>
     </item>
     <item>
-     <widget class="Canvas" name="widget" native="true">
+     <widget class="Canvas" name="canvas" native="true">
       <property name="minimumSize">
        <size>
         <width>1024</width>
@@ -228,6 +235,7 @@
     <slot>calculateGPU()</slot>
     <slot>calculateAVXSerial()</slot>
     <slot>calculateAVXParallel()</slot>
+    <slot>benchmark()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -236,7 +244,7 @@
   <connection>
    <sender>spinBox_2</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>changeNumOfIterations(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -250,7 +258,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>changeIterationSpinBox(int)</signal>
    <receiver>spinBox_2</receiver>
    <slot>setValue(int)</slot>
@@ -266,7 +274,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>resetLabels()</signal>
    <receiver>MainWindow</receiver>
    <slot>resetTimeLabels()</slot>
@@ -282,7 +290,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>setCPUSerialLabel(qint64)</signal>
    <receiver>MainWindow</receiver>
    <slot>setCPUSerialLabel(qint64)</slot>
@@ -298,7 +306,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>setCPUParallelLabel(qint64)</signal>
    <receiver>MainWindow</receiver>
    <slot>setCPUParallelLabel(qint64)</slot>
@@ -314,7 +322,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>setGPULabel(qint64)</signal>
    <receiver>MainWindow</receiver>
    <slot>setGPULabel(qint64)</slot>
@@ -332,7 +340,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>calculateCPUSerial()</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>calculateCPUSerial()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -348,7 +356,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>calculateCPUParallel()</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>calculateCPUParallel()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -364,7 +372,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>calculateGPU()</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>calculateGPU()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -380,7 +388,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>calculateAVXSerial()</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>calculateAVXSerial()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -396,7 +404,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>calculateAVXParallel()</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>calculateAVXParallel()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -410,7 +418,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>setAVXSerialLabel(qint64)</signal>
    <receiver>MainWindow</receiver>
    <slot>setAVXSerialLabel(qint64)</slot>
@@ -426,7 +434,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>widget</sender>
+   <sender>canvas</sender>
    <signal>setAVXParallelLabel(qint64)</signal>
    <receiver>MainWindow</receiver>
    <slot>setAVXParallelLabel(qint64)</slot>
@@ -444,16 +452,32 @@
   <connection>
    <sender>pushButton</sender>
    <signal>clicked()</signal>
-   <receiver>widget</receiver>
+   <receiver>canvas</receiver>
    <slot>reset()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>104</x>
-     <y>223</y>
+     <x>114</x>
+     <y>255</y>
     </hint>
     <hint type="destinationlabel">
      <x>284</x>
      <y>229</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>benchmarkButton</sender>
+   <signal>clicked()</signal>
+   <receiver>canvas</receiver>
+   <slot>benchmark()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>146</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>246</x>
+     <y>294</y>
     </hint>
    </hints>
   </connection>
@@ -464,6 +488,7 @@
   <signal>calculateGPU()</signal>
   <signal>calculateAVXSerial()</signal>
   <signal>calculateAVXParallel()</signal>
+  <signal>benchmark()</signal>
   <slot>reset()</slot>
   <slot>resetTimeLabels()</slot>
   <slot>setCPUSerialLabel(qint64)</slot>

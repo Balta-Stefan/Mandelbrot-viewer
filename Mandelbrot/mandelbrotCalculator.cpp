@@ -438,8 +438,6 @@ unsigned int MandelbrotCalculator::isMandelbrotNumber(double real, double imagin
     double secondaryReal = 0;
     double secondaryImaginary = 0;
 
-    //qInfo() << "(r, i) = " << real << ", " << imaginary;
-    //qInfo() << "real, imaginary:" << real << imaginary;
     for (unsigned int i = 0; i < numberOfIterations; i++)
     {
 
@@ -453,26 +451,7 @@ unsigned int MandelbrotCalculator::isMandelbrotNumber(double real, double imagin
 
         secondaryImaginary = 2*secondaryReal*secondaryImaginary + imaginary;
         secondaryReal = a2 - b2 + real;
-
-
-        /*double tempReal = secondaryReal * secondaryReal - secondaryImaginary * secondaryImaginary + real;
-        double tempImaginary = 2 * secondaryReal * secondaryImaginary + imaginary;
-
-        if ((tempReal * tempReal + tempImaginary * tempImaginary) > 4)
-        {
-            //screen[coordinateY][coordinateX] = 1;
-            //image.setPixelColor(coordinateX, coordinateY, Qt::white);
-            return i;
-        }
-
-//(a + ib)^2
-
-        secondaryReal = tempReal;
-        secondaryImaginary = tempImaginary;*/
     }
-
-    //screen[coordinateY][coordinateX] = 0;
-    //image.setPixelColor(coordinateX, coordinateY, Qt::black);
     return 0;
 }
 
