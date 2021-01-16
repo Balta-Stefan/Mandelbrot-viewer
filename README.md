@@ -1,5 +1,5 @@
 # Mandelbrot-viewer
-A Mandelbrot set viewer made in Qt (C++)  
+A Mandelbrot set viewer made in Qt (C++) using OpenCL and OpenMP.
 ![GIF](https://i.imgur.com/WdoLHQV.gif)  
 
 To do:
