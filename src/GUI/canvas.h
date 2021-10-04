@@ -44,7 +44,6 @@ private:
 
     void paintEvent(QPaintEvent *event) override;
     unsigned int numberOfIterations;
-    unsigned int isMandelbrotNumber(double real, double imaginary);
     double upperLeftX, upperLeftY, downRightX, downRightY;
     double aspectRatio;
     void calculateCoords();

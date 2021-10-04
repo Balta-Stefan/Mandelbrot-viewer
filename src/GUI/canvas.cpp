@@ -301,41 +301,6 @@ void Canvas::changeNumOfIterations(int n)
     calculateAVXParallel();
 }
 
-//unsigned int isMandelbrotNumber(double real, double imaginary, unsigned short numberOfIterations)
-unsigned int Canvas::isMandelbrotNumber(double real, double imaginary)
-
-{
-    //coordinates are to be used in multithreaded implementation for determining which pixel should be coloured, thread safe container will receive a tuple (convergenceSpeed, coordinateX, coordinateY)
-    double secondaryReal = real;
-    double secondaryImaginary = imaginary;
-
-    //qInfo() << "(r, i) = " << real << ", " << imaginary;
-    //qInfo() << "real, imaginary:" << real << imaginary;
-    for (unsigned int i = 0; i < numberOfIterations; i++)
-    {
-
-        //(a+ib)^2 = a^2 - b^2 + i2ab
-        double tempReal = secondaryReal * secondaryReal - secondaryImaginary * secondaryImaginary + real;
-        double tempImaginary = 2 * secondaryReal * secondaryImaginary + imaginary;
-
-        if ((tempReal * tempReal + tempImaginary * tempImaginary) > 4)
-        {
-            //screen[coordinateY][coordinateX] = 1;
-            //image.setPixelColor(coordinateX, coordinateY, Qt::white);
-            return i;
-        }
-
-
-
-        secondaryReal = tempReal;
-        secondaryImaginary = tempImaginary;
-    }
-
-    //screen[coordinateY][coordinateX] = 0;
-    //image.setPixelColor(coordinateX, coordinateY, Qt::black);
-    return 0;
-}
-
 void Canvas::calculateCoords()
 {
     if ((releasedMovedX == clickedX) || (releasedMovedY == clickedY))
