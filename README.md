@@ -1,6 +1,6 @@
 # Mandelbrot-viewer
 A Mandelbrot set viewer made in Qt (C++) using OpenCL and OpenMP.
-![GIF](https://i.imgur.com/WdoLHQV.gif)  
+![GIF](https://raw.githubusercontent.com/Balta-Stefan/Mandelbrot-viewer/Separated-GUI/Presentation.gif)  
 
 To do:
 1. ~~implement multithreading~~
