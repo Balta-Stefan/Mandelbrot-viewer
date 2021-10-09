@@ -3,7 +3,7 @@ A Mandelbrot set viewer made in Qt (C++) using OpenCL and OpenMP.
 ![GIF](https://i.imgur.com/WdoLHQV.gif)  
 
 To do:
-1. ~~implement multithreading~~
+1. ~~implement multithreading
 2. ~~add different color palettes 
 3. implement smoothing algorithm
 4. use higher floating point precision
