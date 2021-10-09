@@ -18,6 +18,10 @@
 #include "Mandelbrotters/mandelbrot_avx_serial.h"
 #include "Mandelbrotters/mandelbrot_avx_parallel.h"
 #include "Mandelbrotters/mandelbrot_gpu.h"
+#include "GUI/iterationtocolorinterface.h"
+#include "GUI/DefaultColorer.h"
+#include "GUI/LinearColorer.h"
+#include "GUI/SineColorer.h"
 
 //when forming a selection rectangle, redraw the widget (using QImage converted to pixmap) and draw rectangle over it
 //multithreading: subclass QObject, create QThread object and move that QObject to QThread (movetothread method)
@@ -31,10 +35,13 @@ private:
     Mandelbrot_AVX_Parallel* mandelbrotterAvxParallel;
     Mandelbrot_GPU* mandelbrotterGPU;
 
+    IterationToColorInterface* colorer;
+
     //MandelbrotCalculatorOLD* mandelbrotter;
 
     const unsigned short canvasWidth = 1024;
     const unsigned short canvasHeight = 760;
+    unsigned int* screen; // holds
 
     const char* serializedFileName = "mandelbrot coordinates.bin";
     void serializeCoordinates();
@@ -63,7 +70,7 @@ private:
     void calculatorFunction(unsigned short screenColorRowIndex);
     void createColorPalette();
 
-    unsigned int* screen;
+
 
     QElapsedTimer timer;
 

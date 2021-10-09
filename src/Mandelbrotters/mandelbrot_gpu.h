@@ -5,10 +5,10 @@
 class Mandelbrot_GPU : public MandelbrotCalculator
 {
 public:
-    Mandelbrot_GPU(unsigned int* escapeCounts, int width, int height);
+    Mandelbrot_GPU(int width, int height);
     Mandelbrot_GPU(const MandelbrotCalculator &obj);
 
-    void calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
+    unsigned int* calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
 
 private:
     unsigned int sizeOfTheWorld;

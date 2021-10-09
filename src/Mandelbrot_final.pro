@@ -10,27 +10,35 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    GUI/DefaultColorer.cpp \
+    GUI/LinearColorer.cpp \
+    GUI/SineColorer.cpp \
     MandelbrotCalculatorOLD.cpp \
-    GUI\canvas.cpp \
-    GUI\main.cpp \
-    GUI\mainwindow.cpp \
-    Mandelbrotters\mandelbrot_avx_parallel.cpp \
-    Mandelbrotters\mandelbrot_avx_serial.cpp \
-    Mandelbrotters\mandelbrot_cpu_parallel.cpp \
-    Mandelbrotters\mandelbrot_cpu_serial.cpp \
-    Mandelbrotters\mandelbrot_gpu.cpp \
-    Mandelbrotters\mandelbrotcalculator.cpp
+    GUI/canvas.cpp \
+    GUI/main.cpp \
+    GUI/mainwindow.cpp \
+    GUI/iterationtocolorinterface.cpp \
+    Mandelbrotters/mandelbrot_avx_parallel.cpp \
+    Mandelbrotters/mandelbrot_avx_serial.cpp \
+    Mandelbrotters/mandelbrot_cpu_parallel.cpp \
+    Mandelbrotters/mandelbrot_cpu_serial.cpp \
+    Mandelbrotters/mandelbrot_gpu.cpp \
+    Mandelbrotters/mandelbrotcalculator.cpp \
 
 HEADERS += \
+    GUI/DefaultColorer.h \
+    GUI/LinearColorer.h \
+    GUI/SineColorer.h \
     MandelbrotCalculatorOLD.h \
-    GUI\canvas.h \
-    GUI\mainwindow.h \
-    Mandelbrotters\mandelbrot_avx_parallel.h \
-    Mandelbrotters\mandelbrot_avx_serial.h \
-    Mandelbrotters\mandelbrot_cpu_parallel.h \
-    Mandelbrotters\mandelbrot_cpu_serial.h \
-    Mandelbrotters\mandelbrot_gpu.h \
-    Mandelbrotters\mandelbrotcalculator.h
+    GUI/canvas.h \
+    GUI/mainwindow.h \
+    GUI/iterationtocolorinterface.h \
+    Mandelbrotters/mandelbrot_avx_parallel.h \
+    Mandelbrotters/mandelbrot_avx_serial.h \
+    Mandelbrotters/mandelbrot_cpu_parallel.h \
+    Mandelbrotters/mandelbrot_cpu_serial.h \
+    Mandelbrotters/mandelbrot_gpu.h \
+    Mandelbrotters/mandelbrotcalculator.h \
 
 FORMS += \
     GUI\mainwindow.ui

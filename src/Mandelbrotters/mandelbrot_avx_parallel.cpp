@@ -1,6 +1,6 @@
-#include "mandelbrot_avx_parallel.h"
+#include "Mandelbrotters/mandelbrot_avx_parallel.h"
 
-Mandelbrot_AVX_Parallel::Mandelbrot_AVX_Parallel(unsigned int* escapeCounts, int width, int height) : MandelbrotCalculator(escapeCounts, width, height)
+Mandelbrot_AVX_Parallel::Mandelbrot_AVX_Parallel(int width, int height) : MandelbrotCalculator(width, height)
 {
     temporaryResultsParallelAVX = (double**)malloc(height*sizeof(double*));
     for(int i = 0; i < height; i++)
@@ -10,7 +10,7 @@ Mandelbrot_AVX_Parallel::Mandelbrot_AVX_Parallel(unsigned int* escapeCounts, int
 Mandelbrot_AVX_Parallel::Mandelbrot_AVX_Parallel(const MandelbrotCalculator &obj) : MandelbrotCalculator(obj)
 {
     temporaryResultsParallelAVX = (double**)malloc(height*sizeof(double*));
-    for(int i = 0; i < height; i++)
+    for(unsigned int i = 0; i < height; i++)
         temporaryResultsParallelAVX[i] = (double*)_aligned_malloc(4*sizeof(double), 32);
 }
 
@@ -22,7 +22,7 @@ Mandelbrot_AVX_Parallel::~Mandelbrot_AVX_Parallel()
 }
 
 
-void Mandelbrot_AVX_Parallel::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
+unsigned int* Mandelbrot_AVX_Parallel::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
 {
     //every thread will have its own aligned array of 4 doubles whose purpose will be to extract data from AVX register.
     //problems might arise due to access to main memory to store results.Compare solution without per thread caching and the one without it.
@@ -48,7 +48,7 @@ void Mandelbrot_AVX_Parallel::calculate(unsigned int numberOfIterations, double 
     _incrementX = _mm256_set1_pd(incrementX);
 
 
-    int wholeParts = width / 4; //4 pixels are read at a time (AVX has 256-bit registers, it can fit 4 doubles).It is possible that canvas dimension won't be a multiple of 4
+    unsigned int wholeParts = width / 4; //4 pixels are read at a time (AVX has 256-bit registers, it can fit 4 doubles).It is possible that canvas dimension won't be a multiple of 4
 
     #pragma omp parallel for
     for(int y = 0; y < height; y++)
@@ -135,9 +135,10 @@ void Mandelbrot_AVX_Parallel::calculate(unsigned int numberOfIterations, double 
             //evaluate the rest one by one
             double realValue = upperLeftX + incrementX*(wholeParts*4);
             int counter = 0;
-            for(int x = wholeParts*4; x < height; x++)
-                escapeCounts[y*width + x] = isMandelbrotNumber(realValue + incrementX*(counter++), imaginaryComponent, numberOfIterations);
+            for(unsigned int x = wholeParts*4; x < height; x++)
+                escapeCounts[y*width + x] = escapeTime(realValue + incrementX*(counter++), imaginaryComponent, numberOfIterations);
         }
     }
 
+    return escapeCounts;
 }

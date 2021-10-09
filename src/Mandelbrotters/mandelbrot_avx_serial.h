@@ -5,11 +5,11 @@
 class Mandelbrot_AVX_Serial : public MandelbrotCalculator
 {
 public:
-    Mandelbrot_AVX_Serial(unsigned int* escapeCounts, int width, int height);
+    Mandelbrot_AVX_Serial(int width, int height);
     Mandelbrot_AVX_Serial(const MandelbrotCalculator &obj);
     ~Mandelbrot_AVX_Serial();
 
-    void calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
+    unsigned int* calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
 
 private:
     double* temporaryResultSerialAVX;

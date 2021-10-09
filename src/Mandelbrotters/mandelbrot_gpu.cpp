@@ -1,6 +1,6 @@
-#include "mandelbrot_gpu.h"
+#include "Mandelbrotters/mandelbrot_gpu.h"
 
-Mandelbrot_GPU::Mandelbrot_GPU(unsigned int* escapeCounts, int width, int height) :  MandelbrotCalculator(escapeCounts, width, height)
+Mandelbrot_GPU::Mandelbrot_GPU(int width, int height) :  MandelbrotCalculator(width, height)
 {
     GPUInit();
 }
@@ -103,7 +103,7 @@ void Mandelbrot_GPU::GPUInit()
     clFinish(queue);
 }
 
-void Mandelbrot_GPU::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
+unsigned int* Mandelbrot_GPU::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
 {
     //set kernel arguments
     //only the first 3 args are set once
@@ -132,6 +132,8 @@ void Mandelbrot_GPU::calculate(unsigned int numberOfIterations, double upperLeft
         throw TranslateOpenCLError(err);
 
     clFinish(queue);
+
+    return escapeCounts;
 }
 
 std::string Mandelbrot_GPU::readKernelSource(const std::string filename)

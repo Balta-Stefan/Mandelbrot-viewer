@@ -5,11 +5,11 @@
 class Mandelbrot_AVX_Parallel : public MandelbrotCalculator
 {
 public:
-    Mandelbrot_AVX_Parallel(unsigned int* escapeCounts, int width, int height);
+    Mandelbrot_AVX_Parallel(int width, int height);
     Mandelbrot_AVX_Parallel(const MandelbrotCalculator &obj);
     ~Mandelbrot_AVX_Parallel();
 
-    void calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
+    unsigned int* calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
 
 private:
     double** temporaryResultsParallelAVX;

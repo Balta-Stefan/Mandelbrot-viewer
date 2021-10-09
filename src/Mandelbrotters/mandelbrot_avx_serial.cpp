@@ -1,6 +1,6 @@
-#include "mandelbrot_avx_serial.h"
+#include "Mandelbrotters/mandelbrot_avx_serial.h"
 
-Mandelbrot_AVX_Serial::Mandelbrot_AVX_Serial(unsigned int* escapeCounts, int width, int height) : MandelbrotCalculator(escapeCounts, width, height)
+Mandelbrot_AVX_Serial::Mandelbrot_AVX_Serial(int width, int height) : MandelbrotCalculator(width, height)
 {
     temporaryResultSerialAVX = (double*)_aligned_malloc(4*sizeof(double), 32); //which boundary?32 or 64?
 }
@@ -15,7 +15,7 @@ Mandelbrot_AVX_Serial::~Mandelbrot_AVX_Serial()
      _aligned_free(temporaryResultSerialAVX);
 }
 
-void Mandelbrot_AVX_Serial::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
+unsigned int* Mandelbrot_AVX_Serial::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
 {
     double incrementX = (downRightX - upperLeftX) / (double)width;
     double incrementY = (upperLeftY - downRightY) / (double)height;
@@ -118,7 +118,9 @@ void Mandelbrot_AVX_Serial::calculate(unsigned int numberOfIterations, double up
             double realValue = upperLeftX + incrementX*(wholeParts*4);
             int counter = 0;
             for(int x = wholeParts*4; x < width; x++)
-                escapeCounts[y*width + x] = isMandelbrotNumber(realValue + incrementX*(counter++), imaginaryComponent, numberOfIterations);
+                escapeCounts[y*width + x] = escapeTime(realValue + incrementX*(counter++), imaginaryComponent, numberOfIterations);
         }
     }
+
+    return escapeCounts;
 }

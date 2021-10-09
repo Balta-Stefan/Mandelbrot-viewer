@@ -153,11 +153,22 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent)
     //canvasWidth = 1024;
     //canvasHeight = 768;
 
-    screen = (unsigned int*)calloc(canvasHeight*canvasWidth, sizeof(unsigned int));
+    //screen = (unsigned int*)calloc(canvasHeight*canvasWidth, sizeof(unsigned int));
     //screen = (unsigned int*)_aligned_malloc(canvasWidth*canvasHeight*sizeof(unsigned int), 32); //which alignment boundary?32 or 64?
 
+    //colorer = new DefaultColorer(canvasWidth, canvasHeight);
 
-    mandelbrotterSerialCPU = new Mandelbrot_CPU_Serial(screen, canvasWidth, canvasHeight);
+    QColor color1(0, 128, 0);
+    QColor color2(255, 255, 255);
+    QColor color3(255, 0, 128);
+
+    /*QColor color1(255, 16, 0);
+    QColor color2(255, 249, 0);
+    QColor color3(255, 96, 158);*/
+    colorer = new SineColorer(canvasWidth, canvasHeight, color1, color2, color3);
+
+
+    mandelbrotterSerialCPU = new Mandelbrot_CPU_Serial(canvasWidth, canvasHeight);
     mandelbrotterParallelCPU = new Mandelbrot_CPU_Parallel(*mandelbrotterSerialCPU);
     mandelbrotterAvxSerial = new Mandelbrot_AVX_Serial(*mandelbrotterSerialCPU);
     mandelbrotterAvxParallel = new Mandelbrot_AVX_Parallel(*mandelbrotterSerialCPU);
@@ -405,7 +416,7 @@ void Canvas::mousePressEvent(QMouseEvent *event)
 void Canvas::calculateCPUSerial()
 {
     timer.start();
-    mandelbrotterSerialCPU->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
+    screen = mandelbrotterSerialCPU->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
     qint64 elapsed = timer.nsecsElapsed();
     emit(setCPUSerialLabel(elapsed));
     draw();
@@ -414,7 +425,7 @@ void Canvas::calculateCPUSerial()
 void Canvas::calculateCPUParallel()
 {
     timer.start();
-    mandelbrotterParallelCPU->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
+    screen = mandelbrotterParallelCPU->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
     qint64 elapsed = timer.nsecsElapsed();
     emit(setCPUParallelLabel(elapsed));
     draw();
@@ -423,7 +434,7 @@ void Canvas::calculateCPUParallel()
 void Canvas::calculateGPU()
 {
     timer.start();
-    mandelbrotterGPU->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
+    screen = mandelbrotterGPU->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
     qint64 elapsed = timer.nsecsElapsed();
     emit(setGPULabel(elapsed));
     draw();
@@ -432,7 +443,7 @@ void Canvas::calculateGPU()
 void Canvas::calculateAVXSerial()
 {
     timer.start();
-    mandelbrotterAvxSerial->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
+    screen = mandelbrotterAvxSerial->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
     qint64 elapsed = timer.nsecsElapsed();
     emit(setAVXSerialLabel(elapsed));
     draw();
@@ -441,7 +452,7 @@ void Canvas::calculateAVXSerial()
 void Canvas::calculateAVXParallel()
 {
     timer.start();
-    mandelbrotterAvxParallel->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
+    screen = mandelbrotterAvxParallel->calculate(numberOfIterations, upperLeftX, upperLeftY, downRightX, downRightY);
     qint64 elapsed = timer.nsecsElapsed();
     emit(setAVXParallelLabel(elapsed));
     draw();
@@ -516,12 +527,12 @@ void Canvas::draw()
     }*/
     //added because of multithreading, should be optimised because only a few rows will be updated each time a thread finishes its job
 
-
+    QColor* colors = colorer->escapeTimeToColor(screen, numberOfIterations);
 
     for(unsigned int y = 0; y < canvasHeight; y++)
         for(unsigned int x = 0; x < canvasWidth; x++)
         {
-            QColor tempColor;
+            /*QColor tempColor;
             if(screen[y*canvasWidth + x] == 0)
                 tempColor = Qt::black;
             else
@@ -534,10 +545,12 @@ void Canvas::draw()
                 tempColor = QColor(r,g,b);
                 tempColor.setAlpha(255);
                 //tempColor = mapping[screen[y*canvasWidth + x] % numberOfColors];
-            }
+            }*/
 
-            image.setPixelColor(x, y, tempColor);
+            image.setPixelColor(x, y, colors[y*canvasWidth + x]);
         }
+    delete[] colors;
+
     update();
 }
 

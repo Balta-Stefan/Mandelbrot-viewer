@@ -6,9 +6,9 @@ class Mandelbrot_CPU_Serial : public MandelbrotCalculator
 {
 public:
     Mandelbrot_CPU_Serial(const MandelbrotCalculator &obj);
-    Mandelbrot_CPU_Serial(unsigned int* escapeCounts, int width, int height);
+    Mandelbrot_CPU_Serial(int width, int height);
 
-    void calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
+    unsigned int* calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY);
 };
 
 #endif // MANDELBROT_CPU_SERIAL_H

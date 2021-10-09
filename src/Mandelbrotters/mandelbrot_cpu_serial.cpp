@@ -1,6 +1,6 @@
-#include "mandelbrot_cpu_serial.h"
+#include "Mandelbrotters/mandelbrot_cpu_serial.h"
 
-Mandelbrot_CPU_Serial::Mandelbrot_CPU_Serial(unsigned int* escapeCounts, int width, int height) : MandelbrotCalculator(escapeCounts, width, height)
+Mandelbrot_CPU_Serial::Mandelbrot_CPU_Serial(int width, int height) : MandelbrotCalculator(width, height)
 {
 
 }
@@ -11,7 +11,7 @@ Mandelbrot_CPU_Serial::Mandelbrot_CPU_Serial(const MandelbrotCalculator &obj) : 
 }
 
 
-void Mandelbrot_CPU_Serial::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
+unsigned int* Mandelbrot_CPU_Serial::calculate(unsigned int numberOfIterations, double upperLeftX, double upperLeftY, double downRightX, double downRightY)
 {
     double incrementX = (downRightX - upperLeftX) / (double)width;
     double incrementY = (upperLeftY - downRightY) / (double)height;
@@ -24,9 +24,11 @@ void Mandelbrot_CPU_Serial::calculate(unsigned int numberOfIterations, double up
         double realValue = upperLeftX;
         for(unsigned int x = 0; x < width; x++)
         {
-            escapeCounts[y*width + x] = isMandelbrotNumber(realValue, imaginaryValue, numberOfIterations);
+            escapeCounts[y*width + x] = escapeTime(realValue, imaginaryValue, numberOfIterations);
             realValue += incrementX;
         }
         imaginaryValue -= incrementY;
     }
+
+    return escapeCounts;
 }
