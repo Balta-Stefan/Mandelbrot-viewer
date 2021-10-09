@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Stefan's Mandelbrot set viewer");
     //emit(calculateCPUParallel());
     emit(calculateAVXParallel());
 }
