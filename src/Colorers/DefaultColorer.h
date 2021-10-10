@@ -2,7 +2,7 @@
 #define DEFAULTCOLORER_H
 
 #include <QColor>
-#include "GUI/iterationtocolorinterface.h"
+#include "Colorers/iterationtocolorinterface.h"
 
 class DefaultColorer : public IterationToColorInterface
 {

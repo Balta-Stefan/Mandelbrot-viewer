@@ -2,7 +2,7 @@
 #define SINECOLORER_H
 
 #include <QColor>
-#include "GUI/iterationtocolorinterface.h"
+#include "Colorers/iterationtocolorinterface.h"
 
 class SineColorer : public IterationToColorInterface
 {

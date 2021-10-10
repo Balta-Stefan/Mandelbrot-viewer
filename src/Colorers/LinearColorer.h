@@ -2,7 +2,7 @@
 #define LINEARCOLORER_H
 
 #include <QColor>
-#include "GUI/iterationtocolorinterface.h"
+#include "Colorers/iterationtocolorinterface.h"
 
 class LinearColorer : public IterationToColorInterface
 {
