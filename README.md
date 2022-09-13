@@ -1,5 +1,12 @@
 # Mandelbrot-viewer
 A Mandelbrot set viewer made in Qt (C++) using OpenCL and OpenMP.
+The user can perform calculations using:
+- One CPU core
+- All CPU cores
+- GPU
+- One CPU core with AVX
+- All CPU cores with AVX
+
 ![GIF](https://raw.githubusercontent.com/Balta-Stefan/Mandelbrot-viewer/Separated-GUI/Presentation.gif)  
 
 To do:
